@@ -2,8 +2,14 @@ import React from "react";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import ExerciseContainer from "./ExerciseContainer";
-const TrainingContainer = ({ session = {} }) => {
+import { useSession } from "../../context/sessionContext";
+const TrainingContainer = ({
+  session = {},
+  date,
+  handleOpenExcModal = () => {},
+}) => {
   const { exercises = [] } = session;
+  const { setSessionInfo } = useSession();
   return (
     <div className="bg-white rounded-md border border-gray-200 p-1">
       <div className="flex justify-between items-center">
@@ -24,7 +30,13 @@ const TrainingContainer = ({ session = {} }) => {
             />
           ))}
       </div>
-      <div className="text-right">
+      <div
+        className="text-right"
+        onClick={() => {
+          setSessionInfo({ date, id: session.id });
+          handleOpenExcModal();
+        }}
+      >
         <AddCircleIcon className="text-gray-400 !h-5 cursor-pointer hover:opacity-75" />
       </div>
     </div>

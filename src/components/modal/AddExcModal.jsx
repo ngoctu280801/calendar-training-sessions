@@ -7,9 +7,11 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { AddCircle, Close } from "@mui/icons-material";
 import BasicTextBox from "../textbox/BasicTextBox";
 import { useSession } from "../../context/sessionContext";
+import { useDispatch } from "react-redux";
+import { addExerciseToSession } from "../../redux-toolkit/sessionSlice";
 const schema = yup.object({
-  title: yup.string().required("Enter excercise name"),
-  exercise: yup.array().of(
+  name: yup.string().required("Enter excercise name"),
+  information: yup.array().of(
     yup.object().shape({
       set: yup.string().required("Enter your excercise information"),
     })
@@ -28,19 +30,29 @@ const AddExcModal = ({ open = false, handleClose = () => {} }) => {
   } = useForm({
     resolver: yupResolver(schema),
     defaultValues: {
-      title: "Exercise name",
-      exercise: [{ set: "Set 1" }, { set: "Set 2" }],
+      name: "Exercise name",
+      information: [{ set: "Set 1" }, { set: "Set 2" }],
     },
     mode: "onChange",
   });
+  const dispatch = useDispatch();
   const { fields, append, remove } = useFieldArray({
     control,
-    name: "exercise",
+    name: "information",
   });
   const { sessionInfo } = useSession();
 
   const handleAddExc = (data) => {
-    console.log(data, sessionInfo);
+    console.log("🚀 ~ file: AddExcModal.jsx:46 ~ handleAddExc ~ data:", data);
+    const information = data.information;
+    const newExercise = information.map((item) => item.set);
+    // const infos = data.map((item) => item.set);
+    dispatch(
+      addExerciseToSession({
+        ...{ name: data.name, information: newExercise },
+        ...sessionInfo,
+      })
+    );
     handleResetForm();
   };
   function handleRemoveSet(index) {
@@ -53,8 +65,8 @@ const AddExcModal = ({ open = false, handleClose = () => {} }) => {
   }
   function handleResetForm() {
     reset({
-      title: "Exercise name",
-      exercise: [{ set: "Set 1" }, { set: "Set 2" }],
+      name: "Exercise name",
+      information: [{ set: "Set 1" }, { set: "Set 2" }],
     });
   }
   return (
@@ -73,21 +85,21 @@ const AddExcModal = ({ open = false, handleClose = () => {} }) => {
             <div className="flex flex-col">
               <div className="font-semibold mb-2">Name</div>
               <BasicTextBox
-                id="title"
-                value={getValues("title")}
+                id="name"
+                value={getValues("name")}
                 control={control}
-                name="title"
+                name="name"
                 onChange={(e) => {
                   console.log(e.target.value);
-                  setValue("title", e.target.value);
+                  setValue("name", e.target.value);
                 }}
                 className="w-full px-10 py-2 outline-none border rounded-md border-slate-400
                 focus:border-black focus:font-medium focus:text-black transition-all"
               />
             </div>
 
-            {errors.title && (
-              <p className="text-red-600 ">{errors.title.message}</p>
+            {errors.name && (
+              <p className="text-red-600 ">{errors.name.message}</p>
             )}
           </div>
 
@@ -100,14 +112,14 @@ const AddExcModal = ({ open = false, handleClose = () => {} }) => {
               >
                 <BasicTextBox
                   control={control}
-                  name={`exercise[${index}].set`}
+                  name={`information[${index}].set`}
                   autoComplete="off"
                   errors={
-                    errors.exercise
-                      ? errors.exercise[index]?.set?.message
+                    errors.information
+                      ? errors.information[index]?.set?.message
                       : null
                   }
-                  defaultValue={getValues(`exercise[${index}].set`)}
+                  defaultValue={getValues(`information[${index}].set`)}
                   className="w-full px-10 py-2 outline-none border rounded-md border-slate-400
                 focus:border-black focus:font-medium focus:text-black transition-all"
                   wrapperClass="w-full"

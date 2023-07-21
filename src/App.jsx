@@ -1,19 +1,20 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./App.css";
 import Calendar from "./module/calendar/Calendar";
 
 import ContainerList from "./module/container/ContainerList";
 import { getAllDaysInTheWeek } from "./utils/fileHelper";
 import moment from "moment";
-import { data } from "./common/data";
+
 function App() {
   const [stateCalendar, setStateCalendar] = useState({
     startDate: +moment(),
     weekDays: getAllDaysInTheWeek(),
   });
-  const [dataInDays, setDataInDays] = useState(data);
+  // const [dataInDays, setDataInDays] = useState([]);
 
   const [timeInCalendar, setTimeInCalendar] = useState(new Date());
+
   //next week
   const goToNextWeek = () => {
     const dateAfter7Days = moment(stateCalendar.startDate).add(7, "days");
@@ -55,7 +56,7 @@ function App() {
         startDate={stateCalendar?.startDate}
         goToToday={goToToday}
       />
-      <ContainerList weekDays={stateCalendar.weekDays} data={dataInDays} />
+      <ContainerList weekDays={stateCalendar.weekDays} />
     </div>
   );
 }

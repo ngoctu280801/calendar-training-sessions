@@ -7,11 +7,6 @@ export const sessionSlice = createSlice({
   initialState: data,
   reducers: {
     addExerciseToSession: (state, action) => {
-      console.log(
-        "🚀 ~ file: sessionSlice.js:10 ~ state:",
-        current(state),
-        action
-      );
       const { payload } = action;
       state?.forEach((session) => {
         if (session.date === payload.date) {
@@ -27,10 +22,30 @@ export const sessionSlice = createSlice({
         }
       });
     },
+    addSession: (state, action) => {
+      const { payload } = action;
+      const filterDate = state?.filter((item) => item.date === payload.date);
+      if (filterDate.length > 0) {
+        state?.forEach((session) => {
+          if (session.date === payload.date) {
+            session.sessions.push({
+              id: uuid(),
+              name: payload.name,
+              exercises: [],
+            });
+          }
+        });
+      } else {
+        state.push({
+          date: payload.date,
+          sessions: [{ id: uuid(), name: payload.name, exercises: [] }],
+        });
+      }
+    },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { addExerciseToSession } = sessionSlice.actions;
+export const { addExerciseToSession, addSession } = sessionSlice.actions;
 
 export default sessionSlice.reducer;

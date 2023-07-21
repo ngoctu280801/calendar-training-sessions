@@ -9,6 +9,7 @@ import BasicTextBox from "../textbox/BasicTextBox";
 import { useSession } from "../../context/sessionContext";
 import { useDispatch } from "react-redux";
 import { addExerciseToSession } from "../../redux-toolkit/sessionSlice";
+import ButtonGroup from "../button/ButtonGroup";
 const schema = yup.object({
   name: yup.string().required("Enter excercise name"),
   information: yup.array().of(
@@ -43,7 +44,6 @@ const AddExcModal = ({ open = false, handleClose = () => {} }) => {
   const { sessionInfo } = useSession();
 
   const handleAddExc = (data) => {
-    console.log("🚀 ~ file: AddExcModal.jsx:46 ~ handleAddExc ~ data:", data);
     const information = data.information;
     const newExercise = information.map((item) => item.set);
     // const infos = data.map((item) => item.set);
@@ -147,25 +147,13 @@ const AddExcModal = ({ open = false, handleClose = () => {} }) => {
             <AddCircle />
             <span>Add set</span>
           </button>
-          <div className="flex gap-2 justify-center">
-            <Button
-              className="border border-gray-500"
-              onClick={() => {
-                handleClose();
-                handleResetForm();
-              }}
-            >
-              Cancel
-            </Button>
-            <Button
-              type="submit"
-              className="bg-blue-500 text-white "
-              //   onClick={handleClose}
-              onClick={() => {}}
-            >
-              Submit
-            </Button>
-          </div>
+          <ButtonGroup
+            handleClose={() => {
+              handleClose();
+              handleResetForm();
+            }}
+            handleConfirm={() => {}}
+          />
         </form>
       </div>
     </BasicModal>

@@ -1,17 +1,30 @@
+import moment from "moment";
 import React from "react";
 
-const Calendar = () => {
+const Calendar = ({
+  goToPreviousWeek = () => {},
+  goToNextWeek = () => {},
+  goToToday = () => {},
+  startDate,
+}) => {
+  const formattedDate = moment(startDate).format(" MMMM, YYYY");
   return (
-    <div className="flex gap-2 mb-4 ">
-      <Item>Tuần trước</Item>
-      <Item>Tuần này</Item>
-      <Item>Tuần sau</Item>
+    <div className="flex mb-4 items-center justify-center gap-4">
+      <div className="flex gap-2 ">
+        <Item onClick={goToPreviousWeek}>Tuần trước</Item>
+        <Item onClick={goToToday}>Tuần này</Item>
+        <Item onClick={goToNextWeek}>Tuần sau</Item>
+      </div>
+      <div className="text-xl font-semibold ">{formattedDate}</div>
     </div>
   );
 };
-const Item = ({ children }) => {
+const Item = ({ children, onClick = () => {} }) => {
   return (
-    <div className="rounded-md border border-gray-100 p-2 cursor-pointer hover:bg-gray-100">
+    <div
+      onClick={onClick}
+      className="rounded-md border border-gray-100 p-2 cursor-pointer hover:bg-gray-100"
+    >
       {children}
     </div>
   );

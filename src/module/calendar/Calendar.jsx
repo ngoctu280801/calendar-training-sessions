@@ -11,9 +11,9 @@ const Calendar = ({
   return (
     <div className="flex mb-4 items-center justify-center gap-4">
       <div className="flex gap-2 ">
-        <Item onClick={goToPreviousWeek}>Tuần trước</Item>
-        <Item onClick={goToToday}>Tuần này</Item>
-        <Item onClick={goToNextWeek}>Tuần sau</Item>
+        <Item onClick={goToPreviousWeek}>Previous week</Item>
+        <Item onClick={goToToday}>Current week</Item>
+        <Item onClick={goToNextWeek}>Next week</Item>
       </div>
       <div className="text-xl font-semibold ">{formattedDate}</div>
     </div>

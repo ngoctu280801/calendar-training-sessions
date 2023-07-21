@@ -5,11 +5,13 @@ import Calendar from "./module/calendar/Calendar";
 import ContainerList from "./module/container/ContainerList";
 import { getAllDaysInTheWeek } from "./utils/fileHelper";
 import moment from "moment";
+import { data } from "./common/data";
 function App() {
   const [stateCalendar, setStateCalendar] = useState({
     startDate: +moment(),
     weekDays: getAllDaysInTheWeek(),
   });
+  const [dataInDays, setDataInDays] = useState(data);
 
   const [timeInCalendar, setTimeInCalendar] = useState(new Date());
   //next week
@@ -53,7 +55,7 @@ function App() {
         startDate={stateCalendar?.startDate}
         goToToday={goToToday}
       />
-      <ContainerList weekDays={stateCalendar.weekDays} />
+      <ContainerList weekDays={stateCalendar.weekDays} data={dataInDays} />
     </div>
   );
 }

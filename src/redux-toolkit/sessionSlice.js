@@ -54,11 +54,23 @@ export const sessionSlice = createSlice({
         }
       });
     },
+    changeSessionInDay: (state, action) => {
+      const { payload } = action;
+      state?.forEach((session) => {
+        if (session.date === payload.date) {
+          session.sessions = payload.sessions;
+        }
+      });
+    },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { addExerciseToSession, addSession, changeIndexOfExercise } =
-  sessionSlice.actions;
+export const {
+  addExerciseToSession,
+  addSession,
+  changeIndexOfExercise,
+  changeSessionInDay,
+} = sessionSlice.actions;
 
 export default sessionSlice.reducer;

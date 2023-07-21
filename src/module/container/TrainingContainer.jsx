@@ -10,6 +10,8 @@ const TrainingContainer = ({
   session = {},
   date,
   handleOpenExcModal = () => {},
+  refItem,
+  ...props
 }) => {
   const { exercises = [] } = session;
   const { setSessionInfo } = useSession();
@@ -27,7 +29,11 @@ const TrainingContainer = ({
     dispatch(changeIndexOfExercise({ date, id: session.id, exercises: items }));
   };
   return (
-    <div className="bg-white rounded-md border border-gray-200 p-1">
+    <div
+      ref={refItem}
+      className="bg-white rounded-md border border-gray-200 p-1"
+      {...props}
+    >
       <div className="flex justify-between items-center">
         <h3 className="uppercase font-semibold text-gray-500 text-[12px]">
           {session.name}
@@ -37,7 +43,7 @@ const TrainingContainer = ({
         </div>
       </div>
       <DragDropContext onDragEnd={handleOnDragEnd}>
-        <Droppable droppableId={`${session.id}`}>
+        <Droppable droppableId={`exerciseInSession${session.id}`}>
           {(provided) => (
             <div
               className="flex flex-col gap-1"

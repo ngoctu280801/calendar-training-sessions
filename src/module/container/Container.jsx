@@ -6,6 +6,9 @@ import AddExcModal from "../../components/modal/AddExcModal";
 import BasicModal from "../../components/modal/BasicModal";
 import { SessionProvider, useSession } from "../../context/sessionContext";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
+import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
+import { useDispatch } from "react-redux";
+import { changeSessionInDay } from "../../redux-toolkit/sessionSlice";
 
 const Container = ({
   day = {},
@@ -20,12 +23,22 @@ const Container = ({
   const { setSessionInfo } = useSession();
   const [sessionList, setSessionList] = useState([]);
   const { open, handleOpenPopup, handleClosePopup } = usePopup();
+  const dispatch = useDispatch();
   useEffect(() => {
     if (Object.keys(data).length > 0) {
       const { sessions } = data;
       setSessionList(sessions);
     }
   }, [data]);
+
+  const handleOnDragEnd = (result) => {
+    if (!result.destination) return;
+    const items = Array.from(sessionList);
+    const [reorderedItem] = items.splice(result.source.index, 1);
+    items.splice(result.destination.index, 0, reorderedItem);
+
+    dispatch(changeSessionInDay({ date: day.dateStamp, sessions: items }));
+  };
 
   return (
     <>
@@ -55,17 +68,37 @@ const Container = ({
           >
             {date}
           </p>
-          <div className="flex flex-col gap-2">
-            {sessionList?.length > 0 &&
-              sessionList.map((session) => (
-                <TrainingContainer
-                  key={session.id}
-                  session={session}
-                  date={data.date}
-                  handleOpenExcModal={handleOpenPopup}
-                />
-              ))}
-          </div>
+          <DragDropContext onDragEnd={handleOnDragEnd}>
+            <Droppable droppableId={`sessionInDay${day.dateStamp}`}>
+              {(provided) => (
+                <div
+                  className="flex flex-col gap-2"
+                  {...provided.droppableProps}
+                  ref={provided.innerRef}
+                >
+                  {sessionList?.length > 0 &&
+                    sessionList.map((session, index) => (
+                      <Draggable
+                        key={session.id}
+                        draggableId={`sessionInDay${session.id}`}
+                        index={index}
+                      >
+                        {(provided) => (
+                          <TrainingContainer
+                            {...provided.draggableProps}
+                            {...provided.dragHandleProps}
+                            refItem={provided.innerRef}
+                            session={session}
+                            date={data.date}
+                            handleOpenExcModal={handleOpenPopup}
+                          />
+                        )}
+                      </Draggable>
+                    ))}
+                </div>
+              )}
+            </Droppable>
+          </DragDropContext>
         </div>
       </div>
     </>

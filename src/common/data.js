@@ -3,7 +3,7 @@ export const data = [
     date: 1689440400000,
     sessions: [
       {
-        name: "leg day",
+        name: "leg day best myself, I will do it",
         id: 1,
         exercises: [
           {

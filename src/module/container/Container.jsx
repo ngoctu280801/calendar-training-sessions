@@ -51,10 +51,10 @@ const Container = ({
           </div>
         </div>
 
-        <div className="bg-gray-50 rounded-lg p-2 h-[calc(100vh-160px)] shadow-md">
+        <div className="bg-gray-50 rounded-lg p-2  shadow-md">
           <p
             className={`text-sm text-gray-500 font-semibold ${
-              timestamp === day.dateStamp && "text-purple-600"
+              timestamp === day.dateStamp && "text-purple-600 !font-bold"
             }`}
           >
             {date}
@@ -66,7 +66,7 @@ const Container = ({
           >
             {(provided, snapshot) => (
               <div
-                className="flex flex-col gap-2 h-full"
+                className="flex flex-col gap-2 min-h-[calc(100vh-160px)]"
                 {...provided.droppableProps}
                 ref={provided.innerRef}
                 style={{

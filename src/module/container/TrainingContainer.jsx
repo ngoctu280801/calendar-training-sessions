@@ -6,10 +6,13 @@ import { useSession } from "../../context/sessionContext";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import { useDispatch } from "react-redux";
 import { changeIndexOfExercise } from "../../redux-toolkit/sessionSlice";
+import uuid from "react-uuid";
 const TrainingContainer = ({
   session = {},
   date,
   handleOpenExcModal = () => {},
+  provided,
+  snapshot,
   refItem,
   ...props
 }) => {
@@ -30,7 +33,14 @@ const TrainingContainer = ({
   };
   return (
     <div
-      ref={refItem}
+      ref={provided.innerRef}
+      {...provided.draggableProps}
+      {...provided.dragHandleProps}
+      style={{
+        backgroundColor: snapshot.isDragging ? "#F5FFFA" : "#fff",
+
+        ...provided.draggableProps.style,
+      }}
       className="bg-white rounded-md border border-gray-200 p-1"
       {...props}
     >
@@ -42,37 +52,16 @@ const TrainingContainer = ({
           <MoreHorizIcon className="!w-5 !h-5 text-gray-500 cursor-pointer" />
         </div>
       </div>
-      <DragDropContext onDragEnd={handleOnDragEnd}>
-        <Droppable droppableId={`exerciseInSession${session.id}`}>
-          {(provided) => (
-            <div
-              className="flex flex-col gap-1"
-              {...provided.droppableProps}
-              ref={provided.innerRef}
-            >
-              {exerciseList?.length > 0 &&
-                exerciseList?.map((exercise, index) => (
-                  <Draggable
-                    key={exercise.id}
-                    draggableId={exercise.id}
-                    index={index}
-                  >
-                    {(provided) => (
-                      <ExerciseContainer
-                        {...provided.draggableProps}
-                        {...provided.dragHandleProps}
-                        refItem={provided.innerRef}
-                        name={exercise.name}
-                        information={exercise.information}
-                      />
-                    )}
-                  </Draggable>
-                ))}
-              {provided.placeholder}
-            </div>
-          )}
-        </Droppable>
-      </DragDropContext>
+      <div className="flex flex-col gap-1">
+        {exerciseList?.length > 0 &&
+          exerciseList?.map((exercise, index) => (
+            <ExerciseContainer
+              key={uuid()}
+              name={exercise.name}
+              information={exercise.information}
+            />
+          ))}
+      </div>
       <div
         className="text-right"
         onClick={() => {

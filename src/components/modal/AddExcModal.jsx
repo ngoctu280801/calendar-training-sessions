@@ -90,7 +90,6 @@ const AddExcModal = ({ open = false, handleClose = () => {} }) => {
                 control={control}
                 name="name"
                 onChange={(e) => {
-                  console.log(e.target.value);
                   setValue("name", e.target.value);
                 }}
                 className="w-full px-10 py-2 outline-none border rounded-md border-slate-400

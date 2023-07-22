@@ -9,6 +9,7 @@ import AddCircleIcon from "@mui/icons-material/AddCircle";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import { useDispatch } from "react-redux";
 import { changeSessionInDay } from "../../redux-toolkit/sessionSlice";
+import uuid from "react-uuid";
 
 const Container = ({
   day = {},
@@ -30,15 +31,6 @@ const Container = ({
       setSessionList(sessions);
     }
   }, [data]);
-
-  const handleOnDragEnd = (result) => {
-    if (!result.destination) return;
-    const items = Array.from(sessionList);
-    const [reorderedItem] = items.splice(result.source.index, 1);
-    items.splice(result.destination.index, 0, reorderedItem);
-
-    dispatch(changeSessionInDay({ date: day.dateStamp, sessions: items }));
-  };
 
   return (
     <>
@@ -68,37 +60,38 @@ const Container = ({
           >
             {date}
           </p>
-          <DragDropContext onDragEnd={handleOnDragEnd}>
-            <Droppable droppableId={`sessionInDay${day.dateStamp}`}>
-              {(provided) => (
-                <div
-                  className="flex flex-col gap-2"
-                  {...provided.droppableProps}
-                  ref={provided.innerRef}
-                >
-                  {sessionList?.length > 0 &&
-                    sessionList.map((session, index) => (
-                      <Draggable
-                        key={session.id}
-                        draggableId={`sessionInDay${session.id}`}
-                        index={index}
-                      >
-                        {(provided) => (
-                          <TrainingContainer
-                            {...provided.draggableProps}
-                            {...provided.dragHandleProps}
-                            refItem={provided.innerRef}
-                            session={session}
-                            date={data.date}
-                            handleOpenExcModal={handleOpenPopup}
-                          />
-                        )}
-                      </Draggable>
-                    ))}
-                </div>
-              )}
-            </Droppable>
-          </DragDropContext>
+          <Droppable droppableId={`${day.dateStamp}`} key={`${day.dateStamp}`}>
+            {(provided, snapshot) => (
+              <div
+                className="flex flex-col gap-2 h-full"
+                {...provided.droppableProps}
+                ref={provided.innerRef}
+                style={{
+                  background: snapshot.isDraggingOver ? "lightblue" : "",
+                }}
+              >
+                {sessionList?.length > 0 &&
+                  sessionList.map((session, index) => (
+                    <Draggable
+                      key={`session${session.id}`}
+                      draggableId={`session${session.id}`}
+                      index={index}
+                    >
+                      {(provided, snapshot) => (
+                        <TrainingContainer
+                          session={session}
+                          date={data.date}
+                          handleOpenExcModal={handleOpenPopup}
+                          provided={provided}
+                          snapshot={snapshot}
+                        />
+                      )}
+                    </Draggable>
+                  ))}
+                {provided.placeholder}
+              </div>
+            )}
+          </Droppable>
         </div>
       </div>
     </>

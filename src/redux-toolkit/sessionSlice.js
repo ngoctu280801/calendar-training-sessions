@@ -54,13 +54,10 @@ export const sessionSlice = createSlice({
         }
       });
     },
-    changeSessionInDay: (state, action) => {
+    changeSession: (state, action) => {
       const { payload } = action;
-      state?.forEach((session) => {
-        if (session.date === payload.date) {
-          session.sessions = payload.sessions;
-        }
-      });
+      state = payload;
+      return state;
     },
   },
 });
@@ -70,7 +67,7 @@ export const {
   addExerciseToSession,
   addSession,
   changeIndexOfExercise,
-  changeSessionInDay,
+  changeSession,
 } = sessionSlice.actions;
 
 export default sessionSlice.reducer;

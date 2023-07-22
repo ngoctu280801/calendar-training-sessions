@@ -10,7 +10,7 @@ import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import { useDispatch } from "react-redux";
 import { changeSessionInDay } from "../../redux-toolkit/sessionSlice";
 import uuid from "react-uuid";
-
+import { DND_TYPE } from "../../common/constant";
 const Container = ({
   day = {},
   data = {},
@@ -43,7 +43,6 @@ const Container = ({
           <div
             className="text-right mr-4"
             onClick={() => {
-              console.log("click");
               setSessionInfo({ date: day.dateStamp });
               handleOpenAddSection();
             }}
@@ -60,7 +59,11 @@ const Container = ({
           >
             {date}
           </p>
-          <Droppable droppableId={`${day.dateStamp}`} key={`${day.dateStamp}`}>
+          <Droppable
+            type={DND_TYPE.SESSIONS}
+            droppableId={`${day.dateStamp}`}
+            key={`${day.dateStamp}`}
+          >
             {(provided, snapshot) => (
               <div
                 className="flex flex-col gap-2 h-full"

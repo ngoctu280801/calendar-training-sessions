@@ -3,13 +3,21 @@ import React from "react";
 const ExerciseContainer = ({
   name = "",
   information = [],
-  refItem,
+  provided,
+  snapshot,
   ...props
 }) => {
   const infos = information.join(", ");
   return (
     <div
-      ref={refItem}
+      ref={provided.innerRef}
+      {...provided.dragHandleProps}
+      {...provided.draggableProps}
+      style={{
+        backgroundColor: snapshot.isDragging ? "#F5FFFA" : "#fff",
+
+        ...provided.draggableProps.style,
+      }}
       {...props}
       className="mx-[1px] border border-gray-200 rounded-md p-1 shadow-sm cursor-pointer hover:bg-gray-100"
     >

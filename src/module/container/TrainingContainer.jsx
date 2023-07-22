@@ -7,6 +7,7 @@ import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import { useDispatch } from "react-redux";
 import { changeIndexOfExercise } from "../../redux-toolkit/sessionSlice";
 import uuid from "react-uuid";
+import { DND_TYPE } from "../../common/constant";
 const TrainingContainer = ({
   session = {},
   date,
@@ -24,18 +25,11 @@ const TrainingContainer = ({
   useEffect(() => {
     setExerciseList(exercises);
   }, [exercises]);
-  const handleOnDragEnd = (result) => {
-    if (!result.destination) return;
-    const items = Array.from(exerciseList);
-    const [reorderedItem] = items.splice(result.source.index, 1);
-    items.splice(result.destination.index, 0, reorderedItem);
-    dispatch(changeIndexOfExercise({ date, id: session.id, exercises: items }));
-  };
+
   return (
     <div
       ref={provided.innerRef}
       {...provided.draggableProps}
-      {...provided.dragHandleProps}
       style={{
         backgroundColor: snapshot.isDragging ? "#F5FFFA" : "#fff",
 
@@ -44,7 +38,10 @@ const TrainingContainer = ({
       className="bg-white rounded-md border border-gray-200 p-1"
       {...props}
     >
-      <div className="flex justify-between items-center">
+      <div
+        {...provided.dragHandleProps}
+        className="flex justify-between items-center"
+      >
         <h3 className="uppercase font-semibold text-gray-500 text-[12px]">
           {session.name}
         </h3>
@@ -52,16 +49,45 @@ const TrainingContainer = ({
           <MoreHorizIcon className="!w-5 !h-5 text-gray-500 cursor-pointer" />
         </div>
       </div>
-      <div className="flex flex-col gap-1">
-        {exerciseList?.length > 0 &&
-          exerciseList?.map((exercise, index) => (
-            <ExerciseContainer
-              key={uuid()}
-              name={exercise.name}
-              information={exercise.information}
-            />
-          ))}
-      </div>
+
+      {/* here */}
+      <Droppable
+        type={DND_TYPE.EXERCISES}
+        droppableId={`${session.id}_${date}`}
+        key={`${session.id}_${date}`}
+      >
+        {(provided, snapshot) => (
+          <div
+            className="flex flex-col gap-1"
+            {...provided.droppableProps}
+            ref={provided.innerRef}
+            style={{
+              background: snapshot.isDraggingOver ? "lightblue" : "",
+            }}
+          >
+            {exerciseList?.length > 0 &&
+              exerciseList?.map((exercise, index) => (
+                <Draggable
+                  key={`${exercise.id}`}
+                  draggableId={`${exercise.id}`}
+                  index={index}
+                >
+                  {(provided, snapshot) => (
+                    <ExerciseContainer
+                      // key={uuid()}
+                      name={exercise.name}
+                      information={exercise.information}
+                      provided={provided}
+                      snapshot={snapshot}
+                    />
+                  )}
+                </Draggable>
+              ))}
+            {provided.placeholder}
+          </div>
+        )}
+      </Droppable>
+
       <div
         className="text-right"
         onClick={() => {

@@ -2,7 +2,7 @@ import _ from "lodash";
 import moment from "moment";
 
 export const getAllDaysInTheWeek = (currentDate = moment()) => {
-  const weekStart = currentDate.clone().startOf("week");
+  const weekStart = currentDate.clone().startOf("week").add(1, "days");
 
   const days = Array.from(Array(7))
     .map((day, index) => index)
@@ -14,6 +14,10 @@ export const getAllDaysInTheWeek = (currentDate = moment()) => {
       dateStamp: +momentObj,
       weekDayName: momentObj.format("dddd"),
     }));
+  console.log(
+    "🚀 ~ file: fileHelper.js:18 ~ getAllDaysInTheWeek ~ days:",
+    days
+  );
 
   return days;
 };

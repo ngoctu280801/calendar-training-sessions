@@ -42,7 +42,10 @@ const TrainingContainer = ({
         {...provided.dragHandleProps}
         className="flex justify-between items-center"
       >
-        <h3 className="uppercase font-semibold text-gray-500 text-[12px] truncate w-[150px]">
+        <h3
+          title={session.name}
+          className="uppercase font-semibold text-gray-500 text-[12px] truncate w-[150px]"
+        >
           {session.name}
         </h3>
         <div onClick={() => {}}>

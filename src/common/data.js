@@ -78,4 +78,48 @@ export const data = [
       },
     ],
   },
+  {
+    date: 1690045200000,
+    sessions: [
+      {
+        name: "leg day best myself, I will do it",
+        id: 9,
+        exercises: [
+          {
+            id: "e9",
+            name: "Exercise 9",
+            information: ["50lb x 9", "35lb x 6"],
+          },
+          {
+            id: "e10",
+            name: "Exercise 10",
+            information: ["50lb x 9", "35lb x 7"],
+          },
+        ],
+      },
+      {
+        name: "hand day",
+        id: 10,
+        exercises: [
+          {
+            id: "e11",
+            name: "Exercise 11",
+            information: ["20lb x 1"],
+          },
+          {
+            id: "e12",
+            name: "Exercise 12",
+            information: [
+              "50lb x 9",
+              "35lb x 7",
+              "35lb x 6",
+              "50lb x 9",
+              "35lb x 7",
+              "35lb x 6",
+            ],
+          },
+        ],
+      },
+    ],
+  },
 ];
